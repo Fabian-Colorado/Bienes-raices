@@ -62,10 +62,14 @@ properties.forEach(property => {
 
     const detailsButton = card.querySelector(".details-button");
     const whatsappButton = card.querySelector(".whatsapp-button");
+    const propertyImage = card.querySelector(".property-image-container");
 
     detailsButton.addEventListener("click", () => {
         openPropertyModal(property);
     });
+    propertyImage.addEventListener("click", () => {
+    openPropertyModal(property);
+});
 
     whatsappButton.addEventListener("click", () => {
         const message = `Hola, me interesa recibir información sobre la casa "${property.title}". ¿Podría darme más información?`;
@@ -163,6 +167,8 @@ function openPropertyModal(property) {
     const nextButton = modal.querySelector(".next");
     const closeButton = modal.querySelector(".close-modal");
     const modalWhatsapp = modal.querySelector(".modal-whatsapp");
+    let touchStartX = 0;
+    let touchEndX = 0;
 
 
     function updateImage() {
@@ -219,3 +225,32 @@ function openPropertyModal(property) {
 
     });
 }
+modalImage.addEventListener("touchstart", (event) => {
+    touchStartX = event.changedTouches[0].screenX;
+});
+
+modalImage.addEventListener("touchend", (event) => {
+    touchEndX = event.changedTouches[0].screenX;
+
+    const difference = touchStartX - touchEndX;
+
+    if (Math.abs(difference) < 50) {
+        return;
+    }
+
+    if (difference > 0) {
+        currentImage++;
+
+        if (currentImage >= property.images.length) {
+            currentImage = 0;
+        }
+    } else {
+        currentImage--;
+
+        if (currentImage < 0) {
+            currentImage = property.images.length - 1;
+        }
+    }
+
+    updateImage();
+});
