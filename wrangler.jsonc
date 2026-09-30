@@ -1,5 +1,5 @@
 {
-  "name": "inmobiliaria-hermano",
+  "name": "J-I-BIENES-RAICES",
   "compatibility_date": "2026-09-30",
 
   "main": "worker.js",
@@ -9,10 +9,11 @@
     "binding": "ASSETS"
   },
 
- "d1_databases": [
+  "d1_databases": [
     {
-        "binding": "DB",
-        "database_name": "inmobiliaria-db",
-        "database_id": "1347afe2-88ee-4a5c-a7f1-9ee31b8bb2a2"
+      "binding": "DB",
+      "database_name": "inmobiliaria-db",
+      "database_id": "1347afe2-88ee-4a5c-a7f1-9ee31b8bb2a2"
     }
-]
+  ]
+}
