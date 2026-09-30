@@ -307,7 +307,11 @@ h2 {
     }
 
     .modal-info {
+        
         padding: 20px;
     }
 
+}
+.property-details {
+    display: none;
 }
