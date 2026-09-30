@@ -1,0 +1,19 @@
+{
+  "name": "inmobiliaria-hermano",
+  "compatibility_date": "2026-09-30",
+
+  "main": "worker.js",
+
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS"
+  },
+
+  "d1_databases": [1347afe2-88ee-4a5c-a7f1-9ee31b8bb2a2]
+    {
+      "binding": "DB",
+      "database_name": "inmobiliaria-db",
+      "database_id": "AQUI_VA_EL_ID_DE_TU_D1"
+    }
+  ]
+}
