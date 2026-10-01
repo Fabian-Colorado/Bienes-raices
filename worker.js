@@ -128,7 +128,6 @@ export default {
             return new Response(JSON.stringify({ success: true }), {
                 headers: { "Content-Type": "application/json" }
             });
-        } 
 
         // API pública - propiedades
         if (url.pathname === "/api/properties") {
