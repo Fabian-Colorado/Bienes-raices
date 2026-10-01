@@ -38,19 +38,22 @@ export default {
 
             const body = await request.json();
 
-            if (body.password === env.ADMIN_PASSWORD) {
+ if (body.password === env.ADMIN_PASSWORD) {
 
-                return new Response(
-                    JSON.stringify({
-                        success: true
-                    }),
-                    {
-                        headers: {
-                            "Content-Type": "application/json"
-                        }
-                    }
-                );
+    const token = await createSessionToken(env.ADMIN_PASSWORD);
+
+    return new Response(
+        JSON.stringify({
+            success: true
+        }),
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "Set-Cookie": `admin_session=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=3600`
             }
+        }
+    );
+}
 
             return new Response(
                 JSON.stringify({
