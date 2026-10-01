@@ -1,4 +1,24 @@
 const propertyList = document.getElementById("property-list");
+const addPropertyButton =
+    document.getElementById("add-property-button");
+
+const propertyFormContainer =
+    document.getElementById("property-form-container");
+
+const cancelPropertyButton =
+    document.getElementById("cancel-property-button");
+
+addPropertyButton.addEventListener("click", () => {
+
+    propertyFormContainer.style.display = "block";
+
+});
+
+cancelPropertyButton.addEventListener("click", () => {
+
+    propertyFormContainer.style.display = "none";
+
+});
 
 async function loadProperties() {
 
