@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Panel de administración</title>
+
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+    <header class="admin-header">
+
+        <div>
+            <h1>Panel de administración</h1>
+            <p>Gestión de propiedades</p>
+        </div>
+
+        <button id="logout-button">
+            Cerrar sesión
+        </button>
+
+    </header>
+
+    <main>
+
+        <section class="admin-section">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>Propiedades</h2>
+                    <p>Administra las casas que aparecen en la página.</p>
+                </div>
+
+                <button id="add-property-button">
+                    + Agregar propiedad
+                </button>
+
+            </div>
+
+            <div id="property-list">
+                <p>Cargando propiedades...</p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="admin-panel.js"></script>
+
+</body>
+</html>
