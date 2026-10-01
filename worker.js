@@ -129,7 +129,7 @@ export default {
                 headers: { "Content-Type": "application/json" }
             });
         }
-
+    }
         // API pública - propiedades
         if (url.pathname === "/api/properties") {
             const { results: properties } = await env.DB.prepare("SELECT * FROM properties ORDER BY id DESC").all();
