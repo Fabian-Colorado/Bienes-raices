@@ -61,12 +61,15 @@ fetch("/api/properties")
         window.open(whatsappURL, "_blank");
     });
 
-    propertyList.appendChild(card);
-});
+            propertyList.appendChild(card);
+        });
 
+    })
+    .catch(error => {
+        console.error("Error al cargar las propiedades:", error);
+    });
 
 function openPropertyModal(property) {
-
     let currentImage = 0;
 
     const modal = document.createElement("div");
