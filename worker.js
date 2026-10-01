@@ -29,10 +29,69 @@ async function createSessionToken(password) {
 
     return `${timestamp}.${signatureHex}`;
 }
+async function verifySessionToken(token, password) {
+
+    if (!token) {
+        return false;
+    }
+
+    const parts = token.split(".");
+
+    if (parts.length !== 2) {
+        return false;
+    }
+
+    const [timestamp, signatureHex] = parts;
+
+    const tokenAge = Date.now() - Number(timestamp);
+
+    // La sesión no puede tener más de 1 hora
+    if (tokenAge > 60 * 60 * 1000 || tokenAge < 0) {
+        return false;
+    }
+
+    const encoder = new TextEncoder();
+
+    const key = await crypto.subtle.importKey(
+        "raw",
+        encoder.encode(password),
+        {
+            name: "HMAC",
+            hash: "SHA-256"
+        },
+        false,
+        ["verify"]
+    );
+
+    const signature = new Uint8Array(
+        signatureHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16))
+    );
+
+    return await crypto.subtle.verify(
+        "HMAC",
+        key,
+        signature,
+        encoder.encode(timestamp)
+    );
+}
 export default {
     async fetch(request, env) {
 
         const url = new URL(request.url);
+        const cookies = request.headers.get("Cookie") || "";
+
+const sessionCookie = cookies
+    .split(";")
+    .find(cookie => cookie.trim().startsWith("admin_session="));
+
+const sessionToken = sessionCookie
+    ? sessionCookie.trim().substring("admin_session=".length)
+    : null;
+
+const isAuthenticated = await verifySessionToken(
+    sessionToken,
+    env.ADMIN_PASSWORD
+);
                 // Login del administrador
         if (url.pathname === "/api/admin/login" && request.method === "POST") {
 
