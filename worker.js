@@ -103,7 +103,7 @@ export default {
             });
         }
 
-        // API administrativa - actualizar propiedad
+          // API administrativa - actualizar propiedad
         if (url.pathname.startsWith("/api/admin/properties/") && request.method === "PUT") {
             if (!isAuthenticated) {
                 return new Response(JSON.stringify({ error: "No autorizado" }), {
@@ -128,8 +128,8 @@ export default {
             return new Response(JSON.stringify({ success: true }), {
                 headers: { "Content-Type": "application/json" }
             });
-        }
-    }
+        } 
+
         // API pública - propiedades
         if (url.pathname === "/api/properties") {
             const { results: properties } = await env.DB.prepare("SELECT * FROM properties ORDER BY id DESC").all();
@@ -160,7 +160,6 @@ export default {
             });
         }
 
-        // 🔹 Aquí estaba el error: faltaba cerrar el bloque antes de este return
         return env.ASSETS.fetch(request);
     }
 };
