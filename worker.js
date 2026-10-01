@@ -103,7 +103,7 @@ export default {
             });
         }
 
-          // API administrativa - actualizar propiedad
+        // API administrativa - actualizar propiedad
         if (url.pathname.startsWith("/api/admin/properties/") && request.method === "PUT") {
             if (!isAuthenticated) {
                 return new Response(JSON.stringify({ error: "No autorizado" }), {
