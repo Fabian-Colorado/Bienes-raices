@@ -39,6 +39,78 @@
                     + Agregar propiedad
                 </button>
 
+                <div id="property-form-container" class="property-form-container">
+
+    <h2>Agregar propiedad</h2>
+
+    <form id="property-form">
+
+        <label>
+            Título
+            <input type="text" id="title" required>
+        </label>
+
+        <label>
+            Precio
+            <input type="text" id="price" placeholder="$1,250,000" required>
+        </label>
+
+        <label>
+            Ubicación
+            <input type="text" id="location" required>
+        </label>
+
+        <label>
+            Habitaciones
+            <input type="number" id="bedrooms" min="0" value="0" required>
+        </label>
+
+        <label>
+            Baños
+            <input type="number" id="bathrooms" min="0" value="0" required>
+        </label>
+
+        <h3>Información de la propiedad</h3>
+
+        <label>
+            <input type="checkbox" id="water">
+            Agua
+        </label>
+
+        <label>
+            <input type="checkbox" id="electricity">
+            Electricidad
+        </label>
+
+        <label>
+            <input type="checkbox" id="deeds">
+            Escrituras
+        </label>
+
+        <label>
+            <input type="checkbox" id="debt">
+            Adeudo
+        </label>
+
+        <label>
+            Descripción
+            <textarea id="description" rows="5"></textarea>
+        </label>
+
+        <button type="submit">
+            Guardar propiedad
+        </button>
+
+        <button type="button" id="cancel-property-button">
+            Cancelar
+        </button>
+
+    </form>
+
+    <p id="form-message"></p>
+
+</div>
+
             </div>
 
             <div id="property-list">
