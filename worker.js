@@ -92,6 +92,10 @@ const isAuthenticated = await verifySessionToken(
     sessionToken,
     env.ADMIN_PASSWORD
 );
+        console.log("Admin panel:", {
+    path: url.pathname,
+    authenticated: isAuthenticated
+});
         if (url.pathname === "/admin-panel.html" && !isAuthenticated) {
 
     return Response.redirect(
