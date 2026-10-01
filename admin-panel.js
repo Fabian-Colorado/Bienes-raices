@@ -226,12 +226,14 @@ if (editingPropertyId === null) {
         formMessage.textContent =
             "Propiedad guardada correctamente.";
 
-        propertyForm.reset();
+editingPropertyId = null;
 
-        document.getElementById("bedrooms").value = 0;
-        document.getElementById("bathrooms").value = 0;
+propertyForm.reset();
 
-        await loadProperties();
+document.getElementById("bedrooms").value = 0;
+document.getElementById("bathrooms").value = 0;
+
+await loadProperties();
 
     } catch (error) {
 
