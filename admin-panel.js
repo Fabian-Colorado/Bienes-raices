@@ -83,6 +83,8 @@ const editButton =
 
 editButton.addEventListener("click", () => {
 
+    editingPropertyId = property.id;
+
     propertyFormContainer.style.display = "block";
 
     document.getElementById("property-form-title").textContent =
@@ -169,10 +171,35 @@ propertyForm.addEventListener("submit", async (event) => {
 
     try {
 
-        const response = await fetch(
-            "/api/admin/properties",
-            {
-                method: "POST",
+let response;
+
+if (editingPropertyId === null) {
+
+    response = await fetch(
+        "/api/admin/properties",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(property)
+        }
+    );
+
+} else {
+
+    response = await fetch(
+        `/api/admin/properties/${editingPropertyId}`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(property)
+        }
+    );
+
+}
                 headers: {
                     "Content-Type": "application/json"
                 },
