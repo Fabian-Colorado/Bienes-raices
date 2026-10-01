@@ -5,7 +5,7 @@
 
   "assets": {
     "binding": "ASSETS",
-    "directory": "./public"
+    "directory": "."
   },
 
   "d1_databases": [
