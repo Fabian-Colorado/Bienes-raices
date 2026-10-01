@@ -170,8 +170,11 @@ if (url.pathname === "/admin-panel.html" && !isAuthenticated) {
                 }
             );
         } 
-                // API administrativa - crear propiedad
-        if (url.pathname === "/api/admin/properties" && request.method === "POST") {
+        // API administrativa - crear propiedad
+        if (
+            url.pathname === "/api/admin/properties" &&
+            request.method === "POST"
+        ) {
 
             if (!isAuthenticated) {
 
@@ -232,6 +235,7 @@ if (url.pathname === "/admin-panel.html" && !isAuthenticated) {
                 }
             );
         }
+
 
         // API administrativa - actualizar propiedad
         if (
@@ -299,7 +303,6 @@ if (url.pathname === "/admin-panel.html" && !isAuthenticated) {
                     }
                 }
             );
-        }
         }
         if (url.pathname === "/api/properties") {
 
