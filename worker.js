@@ -262,10 +262,6 @@ if (url.pathname === "/admin-panel.html" && !isAuthenticated) {
 
             const body = await request.json();
 
-                       const id = url.pathname.split("/").pop();
-
-            const body = await request.json();
-
             const result = await env.DB
                 .prepare(`
                     UPDATE properties
@@ -301,7 +297,6 @@ if (url.pathname === "/admin-panel.html" && !isAuthenticated) {
                 id: id,
                 cambios: result.meta.changes
             });
-                .run();
 
             return new Response(
                 JSON.stringify({
@@ -314,6 +309,7 @@ if (url.pathname === "/admin-panel.html" && !isAuthenticated) {
                 }
             );
         }
+
         if (url.pathname === "/api/properties") {
 
             const { results: properties } = await env.DB
