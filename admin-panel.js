@@ -49,7 +49,9 @@ async function loadProperties() {
         }
 
         properties.forEach(property => {
-
+            
+        const article = document.createElement("article");
+            
 article.innerHTML = `
     <h3>${property.title}</h3>
 
