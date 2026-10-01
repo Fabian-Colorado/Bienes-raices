@@ -96,17 +96,11 @@ const isAuthenticated = await verifySessionToken(
     path: url.pathname,
     authenticated: isAuthenticated
 });
-if (url.pathname === "/admin" && !isAuthenticated) {
+if (url.pathname === "/admin-panel.html" && !isAuthenticated) {
 
     return Response.redirect(
         `${url.origin}/admin.html`,
         302
-    );
-}
-        if (url.pathname === "/admin" && isAuthenticated) {
-
-    return env.ASSETS.fetch(
-        new Request(`${url.origin}/admin-panel.html`, request)
     );
 }
                 // Login del administrador
