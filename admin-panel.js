@@ -13,6 +13,7 @@ const propertyForm =
 
 const formMessage =
     document.getElementById("form-message");
+let editingPropertyId = null;
 
 addPropertyButton.addEventListener("click", () => {
 
