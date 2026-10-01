@@ -8,6 +8,12 @@ const propertyFormContainer =
 const cancelPropertyButton =
     document.getElementById("cancel-property-button");
 
+const propertyForm =
+    document.getElementById("property-form");
+
+const formMessage =
+    document.getElementById("form-message");
+
 addPropertyButton.addEventListener("click", () => {
 
     propertyFormContainer.style.display = "block";
@@ -74,3 +80,80 @@ async function loadProperties() {
 }
 
 loadProperties();
+propertyForm.addEventListener("submit", async (event) => {
+
+    event.preventDefault();
+
+    formMessage.textContent = "Guardando propiedad...";
+
+    const property = {
+
+        title: document.getElementById("title").value,
+        price: document.getElementById("price").value,
+        location: document.getElementById("location").value,
+
+        bedrooms: Number(
+            document.getElementById("bedrooms").value
+        ),
+
+        bathrooms: Number(
+            document.getElementById("bathrooms").value
+        ),
+
+        water: document.getElementById("water").checked,
+        electricity: document.getElementById("electricity").checked,
+        deeds: document.getElementById("deeds").checked,
+        debt: document.getElementById("debt").checked,
+
+        description:
+            document.getElementById("description").value
+    };
+
+    try {
+
+        const response = await fetch(
+            "/api/admin/properties",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(property)
+            }
+        );
+
+        if (response.status === 401) {
+
+            window.location.href = "/admin.html";
+            return;
+        }
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+
+            formMessage.textContent =
+                "No se pudo guardar la propiedad.";
+
+            return;
+        }
+
+        formMessage.textContent =
+            "Propiedad guardada correctamente.";
+
+        propertyForm.reset();
+
+        document.getElementById("bedrooms").value = 0;
+        document.getElementById("bathrooms").value = 0;
+
+        await loadProperties();
+
+    } catch (error) {
+
+        console.error(error);
+
+        formMessage.textContent =
+            "Error al guardar la propiedad.";
+    }
+
+});
