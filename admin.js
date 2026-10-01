@@ -27,8 +27,7 @@ if (response.ok && data.success) {
 
     message.textContent = "Acceso correcto";
 
-    window.location.href = "/admin-panel.html";
-
+    window.location.href = "/admin";
 } else {
 
             message.textContent = data.message || "Contraseña incorrecta";
