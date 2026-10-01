@@ -262,7 +262,11 @@ if (url.pathname === "/admin-panel.html" && !isAuthenticated) {
 
             const body = await request.json();
 
-            await env.DB
+                       const id = url.pathname.split("/").pop();
+
+            const body = await request.json();
+
+            const result = await env.DB
                 .prepare(`
                     UPDATE properties
                     SET
@@ -291,6 +295,12 @@ if (url.pathname === "/admin-panel.html" && !isAuthenticated) {
                     body.description,
                     id
                 )
+                .run();
+
+            console.log("Propiedad actualizada:", {
+                id: id,
+                cambios: result.meta.changes
+            });
                 .run();
 
             return new Response(
