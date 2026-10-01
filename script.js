@@ -4,7 +4,11 @@ fetch("/api/properties")
 
 const propertyList = document.getElementById("property-list");
 
-properties.forEach(property => {
+fetch("/api/properties")
+    .then(response => response.json())
+    .then(properties => {
+
+        properties.forEach(property => {
     const card = document.createElement("article");
 
     card.innerHTML = `
