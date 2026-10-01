@@ -231,6 +231,8 @@ if (url.pathname === "/admin-panel.html" && !isAuthenticated) {
                     }
                 }
             );
+        }
+
         // API administrativa - actualizar propiedad
         if (
             url.pathname.startsWith("/api/admin/properties/") &&
