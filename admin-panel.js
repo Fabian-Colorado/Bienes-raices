@@ -50,21 +50,32 @@ async function loadProperties() {
 
         properties.forEach(property => {
 
-            const article = document.createElement("article");
+article.innerHTML = `
+    <h3>${property.title}</h3>
 
-            article.innerHTML = `
-                <h3>${property.title}</h3>
+    <p><strong>Precio:</strong> ${property.price}</p>
 
-                <p><strong>Precio:</strong> ${property.price}</p>
+    <p><strong>Ubicación:</strong> ${property.location}</p>
 
-                <p><strong>Ubicación:</strong> ${property.location}</p>
+    <p>
+        <strong>Habitaciones:</strong> ${property.bedrooms}
+        |
+        <strong>Baños:</strong> ${property.bathrooms}
+    </p>
 
-                <p>
-                    <strong>Habitaciones:</strong> ${property.bedrooms}
-                    |
-                    <strong>Baños:</strong> ${property.bathrooms}
-                </p>
-            `;
+    <div class="property-actions">
+
+        <button class="edit-property-button">
+            Editar
+        </button>
+
+        <button class="delete-property-button">
+            Eliminar
+        </button>
+
+    </div>
+`;
+
 
             propertyList.appendChild(article);
 
