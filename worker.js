@@ -1,3 +1,34 @@
+async function createSessionToken(password) {
+
+    const timestamp = Date.now().toString();
+
+    const encoder = new TextEncoder();
+
+    const key = await crypto.subtle.importKey(
+        "raw",
+        encoder.encode(password),
+        {
+            name: "HMAC",
+            hash: "SHA-256"
+        },
+        false,
+        ["sign"]
+    );
+
+    const signature = await crypto.subtle.sign(
+        "HMAC",
+        key,
+        encoder.encode(timestamp)
+    );
+
+    const signatureArray = Array.from(new Uint8Array(signature));
+
+    const signatureHex = signatureArray
+        .map(byte => byte.toString(16).padStart(2, "0"))
+        .join("");
+
+    return `${timestamp}.${signatureHex}`;
+}
 export default {
     async fetch(request, env) {
 
