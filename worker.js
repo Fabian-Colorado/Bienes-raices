@@ -231,6 +231,73 @@ if (url.pathname === "/admin-panel.html" && !isAuthenticated) {
                     }
                 }
             );
+        // API administrativa - actualizar propiedad
+        if (
+            url.pathname.startsWith("/api/admin/properties/") &&
+            request.method === "PUT"
+        ) {
+
+            if (!isAuthenticated) {
+
+                return new Response(
+                    JSON.stringify({
+                        error: "No autorizado"
+                    }),
+                    {
+                        status: 401,
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+            }
+
+            const id = url.pathname.split("/").pop();
+
+            const body = await request.json();
+
+            await env.DB
+                .prepare(`
+                    UPDATE properties
+                    SET
+                        title = ?,
+                        price = ?,
+                        location = ?,
+                        bedrooms = ?,
+                        bathrooms = ?,
+                        water = ?,
+                        electricity = ?,
+                        deeds = ?,
+                        debt = ?,
+                        description = ?
+                    WHERE id = ?
+                `)
+                .bind(
+                    body.title,
+                    body.price,
+                    body.location,
+                    body.bedrooms,
+                    body.bathrooms,
+                    body.water ? 1 : 0,
+                    body.electricity ? 1 : 0,
+                    body.deeds ? 1 : 0,
+                    body.debt ? 1 : 0,
+                    body.description,
+                    id
+                )
+                .run();
+
+            return new Response(
+                JSON.stringify({
+                    success: true
+                }),
+                {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+        }
         }
         if (url.pathname === "/api/properties") {
 
