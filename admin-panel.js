@@ -192,15 +192,7 @@ if (editingPropertyId === null) {
         `/api/admin/properties/${editingPropertyId}`,
         {
             method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(property)
-        }
-    );
-
-}
-                headers: {
+               headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(property)
