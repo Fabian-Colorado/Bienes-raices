@@ -139,6 +139,37 @@ if (url.pathname === "/admin-panel.html" && !isAuthenticated) {
             );
         }
 
+               // API administrativa - obtener propiedades
+        if (url.pathname === "/api/admin/properties" && request.method === "GET") {
+
+            if (!isAuthenticated) {
+
+                return new Response(
+                    JSON.stringify({
+                        error: "No autorizado"
+                    }),
+                    {
+                        status: 401,
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+            }
+
+            const { results: properties } = await env.DB
+                .prepare("SELECT * FROM properties ORDER BY id DESC")
+                .all();
+
+            return new Response(
+                JSON.stringify(properties),
+                {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+        } 
         if (url.pathname === "/api/properties") {
 
             const { results: properties } = await env.DB
