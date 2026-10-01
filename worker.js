@@ -2,6 +2,38 @@ export default {
     async fetch(request, env) {
 
         const url = new URL(request.url);
+                // Login del administrador
+        if (url.pathname === "/api/admin/login" && request.method === "POST") {
+
+            const body = await request.json();
+
+            if (body.password === env.ADMIN_PASSWORD) {
+
+                return new Response(
+                    JSON.stringify({
+                        success: true
+                    }),
+                    {
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+            }
+
+            return new Response(
+                JSON.stringify({
+                    success: false,
+                    message: "Contraseña incorrecta"
+                }),
+                {
+                    status: 401,
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+        }
 
         if (url.pathname === "/api/properties") {
 
