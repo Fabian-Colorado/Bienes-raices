@@ -23,11 +23,13 @@ loginForm.addEventListener("submit", async (event) => {
 
         const data = await response.json();
 
-        if (response.ok && data.success) {
+if (response.ok && data.success) {
 
-            message.textContent = "Acceso correcto";
+    message.textContent = "Acceso correcto";
 
-        } else {
+    window.location.href = "/admin-panel.html";
+
+} else {
 
             message.textContent = data.message || "Contraseña incorrecta";
 
