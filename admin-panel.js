@@ -192,28 +192,20 @@ if (editingPropertyId === null) {
         `/api/admin/properties/${editingPropertyId}`,
         {
             method: "PUT",
-               headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(property)
-            }
-        );
-
-        if (response.status === 401) {
-
-            window.location.href = "/admin.html";
-            return;
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(property)
         }
+    );
 
-        const data = await response.json();
+}
 
-        if (!response.ok || !data.success) {
+if (response.status === 401) {
 
-            formMessage.textContent =
-                "No se pudo guardar la propiedad.";
-
-            return;
-        }
+    window.location.href = "/admin.html";
+    return;
+}
 
         formMessage.textContent =
             "Propiedad guardada correctamente.";
