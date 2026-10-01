@@ -77,7 +77,51 @@ article.innerHTML = `
 
     </div>
 `;
+const editButton =
+    article.querySelector(".edit-property-button");
 
+editButton.addEventListener("click", () => {
+
+    propertyFormContainer.style.display = "block";
+
+    document.getElementById("property-form-title").textContent =
+        "Editar propiedad";
+
+    document.getElementById("save-property-button").textContent =
+        "Guardar cambios";
+
+    document.getElementById("title").value =
+        property.title;
+
+    document.getElementById("price").value =
+        property.price;
+
+    document.getElementById("location").value =
+        property.location;
+
+    document.getElementById("bedrooms").value =
+        property.bedrooms;
+
+    document.getElementById("bathrooms").value =
+        property.bathrooms;
+
+    document.getElementById("water").checked =
+        Boolean(property.water);
+
+    document.getElementById("electricity").checked =
+        Boolean(property.electricity);
+
+    document.getElementById("deeds").checked =
+        Boolean(property.deeds);
+
+    document.getElementById("debt").checked =
+        Boolean(property.debt);
+
+    document.getElementById("description").value =
+        property.description || "";
+
+});
+        
 
             propertyList.appendChild(article);
 
