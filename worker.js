@@ -170,6 +170,68 @@ if (url.pathname === "/admin-panel.html" && !isAuthenticated) {
                 }
             );
         } 
+                // API administrativa - crear propiedad
+        if (url.pathname === "/api/admin/properties" && request.method === "POST") {
+
+            if (!isAuthenticated) {
+
+                return new Response(
+                    JSON.stringify({
+                        error: "No autorizado"
+                    }),
+                    {
+                        status: 401,
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+            }
+
+            const body = await request.json();
+
+            const result = await env.DB
+                .prepare(`
+                    INSERT INTO properties (
+                        title,
+                        price,
+                        location,
+                        bedrooms,
+                        bathrooms,
+                        water,
+                        electricity,
+                        deeds,
+                        debt,
+                        description
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                `)
+                .bind(
+                    body.title,
+                    body.price,
+                    body.location,
+                    body.bedrooms,
+                    body.bathrooms,
+                    body.water ? 1 : 0,
+                    body.electricity ? 1 : 0,
+                    body.deeds ? 1 : 0,
+                    body.debt ? 1 : 0,
+                    body.description
+                )
+                .run();
+
+            return new Response(
+                JSON.stringify({
+                    success: true,
+                    id: result.meta.last_row_id
+                }),
+                {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+        }
         if (url.pathname === "/api/properties") {
 
             const { results: properties } = await env.DB
