@@ -11,6 +11,15 @@ const cancelPropertyButton =
 const propertyForm =
     document.getElementById("property-form");
 
+const propertyImagesInput =
+    document.getElementById("property-images");
+
+const uploadImagesButton =
+    document.getElementById("upload-images-button");
+
+const imageUploadMessage =
+    document.getElementById("image-upload-message");
+
 const formMessage =
     document.getElementById("form-message");
 let editingPropertyId = null;
@@ -226,5 +235,55 @@ await loadProperties();
         formMessage.textContent =
             "Error al guardar la propiedad.";
     }
+uploadImagesButton.addEventListener("click", async () => {
+    if (editingPropertyId === null) {
+        imageUploadMessage.textContent =
+            "Primero guarda la propiedad y después podrás subir fotografías.";
+        return;
+    }
 
+    const files = propertyImagesInput.files;
+
+    if (files.length === 0) {
+        imageUploadMessage.textContent =
+            "Selecciona al menos una fotografía.";
+        return;
+    }
+
+    imageUploadMessage.textContent = "Subiendo fotografías...";
+
+    try {
+        for (const file of files) {
+            const response = await fetch(
+                `/api/admin/properties/${editingPropertyId}/images`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": file.type
+                    },
+                    body: file
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                imageUploadMessage.textContent =
+                    "Error: " + (result.error || "No se pudo subir la fotografía.");
+                return;
+            }
+        }
+
+        imageUploadMessage.textContent =
+            "Fotografías subidas correctamente.";
+
+        propertyImagesInput.value = "";
+
+        await loadProperties();
+
+    } catch (error) {
+        console.error(error);
+        imageUploadMessage.textContent =
+            "Error de conexión al subir las fotografías.";
+    }
 });
