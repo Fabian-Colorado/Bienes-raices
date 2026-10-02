@@ -130,6 +130,81 @@ export default {
             });
         }
 
+                // API administrativa - subir imagen de propiedad
+        if (url.pathname.startsWith("/api/admin/properties/") && url.pathname.endsWith("/images") && request.method === "POST") {
+            if (!isAuthenticated) {
+                return new Response(JSON.stringify({ error: "No autorizado" }), {
+                    status: 401,
+                    headers: { "Content-Type": "application/json" }
+                });
+            }
+
+            const parts = url.pathname.split("/");
+            const propertyId = parts[4];
+
+            const property = await env.DB.prepare(
+                "SELECT id FROM properties WHERE id = ?"
+            ).bind(propertyId).first();
+
+            if (!property) {
+                return new Response(JSON.stringify({
+                    error: "La propiedad no existe"
+                }), {
+                    status: 404,
+                    headers: { "Content-Type": "application/json" }
+                });
+            }
+
+            const contentType = request.headers.get("Content-Type") || "";
+
+            if (!contentType.startsWith("image/")) {
+                return new Response(JSON.stringify({
+                    error: "El archivo debe ser una imagen"
+                }), {
+                    status: 400,
+                    headers: { "Content-Type": "application/json" }
+                });
+            }
+
+            const imageId = crypto.randomUUID();
+            const extension = contentType.split("/")[1] || "jpg";
+            const imageKey = `properties/${propertyId}/${imageId}.${extension}`;
+
+            const file = await request.arrayBuffer();
+
+            await env.IMAGES.put(imageKey, file, {
+                httpMetadata: {
+                    contentType: contentType
+                }
+            });
+
+            const imageUrl = `/api/images/${imageKey}`;
+
+            const currentImages = await env.DB.prepare(
+                "SELECT COUNT(*) AS total FROM property_images WHERE property_id = ?"
+            ).bind(propertyId).first();
+
+            const sortOrder = currentImages.total || 0;
+
+            await env.DB.prepare(`
+                INSERT INTO property_images (
+                    property_id, image_url, sort_order
+                ) VALUES (?, ?, ?)
+            `).bind(
+                propertyId,
+                imageUrl,
+                sortOrder
+            ).run();
+
+            return new Response(JSON.stringify({
+                success: true,
+                image_url: imageUrl
+            }), {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+        }
         // API pública - propiedades
         if (url.pathname === "/api/properties") {
             const { results: properties } = await env.DB.prepare("SELECT * FROM properties ORDER BY id DESC").all();
