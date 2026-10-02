@@ -182,16 +182,19 @@ deletePropertyButton.addEventListener("click", async () => {
             return;
         }
 
-        await loadProperties();
+await loadProperties();
 
-} catch (error) {
+    } catch (error) {
 
-    console.error(error);
+        console.error(error);
 
-    alert(
-        "Error: " + error.message
-    );
-}
+        alert(
+            "Error: " + error.message
+        );
+    }
+
+});
+
 const deleteImageButtons =
     article.querySelectorAll(".delete-image-button");
 
