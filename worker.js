@@ -160,6 +160,22 @@ export default {
             });
         }
 
+                // Prueba de conexión con R2
+        if (url.pathname === "/api/test-r2") {
+            const testFile = await env.IMAGES.get("test.txt");
+
+            return new Response(
+                JSON.stringify({
+                    r2_connected: true,
+                    test_file_exists: Boolean(testFile)
+                }),
+                {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+        }
         return env.ASSETS.fetch(request);
     }
 };
