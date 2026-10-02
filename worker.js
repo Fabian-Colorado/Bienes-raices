@@ -205,6 +205,25 @@ export default {
                 }
             });
         }
+                // API pública - obtener imagen desde R2
+        if (url.pathname.startsWith("/api/images/") && request.method === "GET") {
+            const imageKey = url.pathname.substring("/api/images/".length);
+
+            const image = await env.IMAGES.get(imageKey);
+
+            if (!image) {
+                return new Response("Imagen no encontrada", {
+                    status: 404
+                });
+            }
+
+            return new Response(image.body, {
+                headers: {
+                    "Content-Type": image.httpMetadata?.contentType || "image/jpeg",
+                    "Cache-Control": "public, max-age=31536000"
+                }
+            });
+        }
         // API pública - propiedades
         if (url.pathname === "/api/properties") {
             const { results: properties } = await env.DB.prepare("SELECT * FROM properties ORDER BY id DESC").all();
