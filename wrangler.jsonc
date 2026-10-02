@@ -15,4 +15,10 @@
       "database_id": "1347afe2-88ee-4a5c-a7f1-9ee31b8bb2a2"
     }
   ]
+  "r2_buckets": [
+    {
+      "binding": "IMAGES",
+      "bucket_name": "bienes-raices-images"
+    }
+  ]
 }
