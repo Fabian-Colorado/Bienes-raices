@@ -172,13 +172,8 @@ if (url.pathname === "/api/admin/properties" && request.method === "GET") {
             });
         }
 
-        // API administrativa - eliminar imagen de propiedad
+      // API administrativa - eliminar propiedad completa
 if (
-    url.pathname.startsWith("/api/admin/properties/") &&
-    url.pathname.endsWith("/images") &&
-    request.method === "DELETE"
-) {
-    if (
     url.pathname.startsWith("/api/admin/properties/") &&
     request.method === "DELETE" &&
     !url.pathname.endsWith("/images")
@@ -240,6 +235,14 @@ if (
         }
     });
 }
+
+
+// API administrativa - eliminar imagen de propiedad
+if (
+    url.pathname.startsWith("/api/admin/properties/") &&
+    url.pathname.endsWith("/images") &&
+    request.method === "DELETE"
+) {
     if (!isAuthenticated) {
         return new Response(JSON.stringify({
             error: "No autorizado"
@@ -283,7 +286,8 @@ if (
         });
     }
 
-    const imageKey = image.image_url.replace("/api/images/", "");
+    const imageKey =
+        image.image_url.replace("/api/images/", "");
 
     await env.IMAGES.delete(imageKey);
 
