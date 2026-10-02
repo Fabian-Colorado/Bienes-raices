@@ -235,7 +235,9 @@ await loadProperties();
 
         formMessage.textContent =
             "Error al guardar la propiedad.";
-    });
+    }
+
+});
 
 uploadImagesButton.addEventListener("click", async () => {
     if (editingPropertyId === null) {
