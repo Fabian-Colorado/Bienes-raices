@@ -66,17 +66,59 @@ export default {
             });
         }
 
-        // API administrativa - obtener propiedades
-        if (url.pathname === "/api/admin/properties" && request.method === "GET") {
-            if (!isAuthenticated) {
-                return new Response(JSON.stringify({ error: "No autorizado" }), {
-                    status: 401,
-                    headers: { "Content-Type": "application/json" }
-                });
+       // API administrativa - obtener propiedades
+if (url.pathname === "/api/admin/properties" && request.method === "GET") {
+    if (!isAuthenticated) {
+        return new Response(JSON.stringify({
+            error: "No autorizado"
+        }), {
+            status: 401,
+            headers: {
+                "Content-Type": "application/json"
             }
-            const { results: properties } = await env.DB.prepare("SELECT * FROM properties ORDER BY id DESC").all();
-            return new Response(JSON.stringify(properties), { headers: { "Content-Type": "application/json" } });
+        });
+    }
+
+    const { results: properties } = await env.DB.prepare(
+        "SELECT * FROM properties ORDER BY id DESC"
+    ).all();
+
+    const { results: images } = await env.DB.prepare(
+        "SELECT * FROM property_images ORDER BY property_id, sort_order"
+    ).all();
+
+    const formattedProperties = properties.map(property => {
+
+        const propertyImages = images
+            .filter(image => image.property_id === property.id)
+            .map(image => image.image_url);
+
+        return {
+            id: property.id,
+            title: property.title,
+            price: property.price,
+            location: property.location,
+            bedrooms: property.bedrooms,
+            bathrooms: property.bathrooms,
+            water: property.water,
+            electricity: property.electricity,
+            deeds: property.deeds,
+            debt: property.debt,
+            description: property.description,
+            created_at: property.created_at,
+            images: propertyImages
+        };
+    });
+
+    return new Response(
+        JSON.stringify(formattedProperties),
+        {
+            headers: {
+                "Content-Type": "application/json"
+            }
         }
+    );
+}
 
         // API administrativa - crear propiedad
         if (url.pathname === "/api/admin/properties" && request.method === "POST") {
