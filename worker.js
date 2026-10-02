@@ -178,6 +178,68 @@ if (
     url.pathname.endsWith("/images") &&
     request.method === "DELETE"
 ) {
+    if (
+    url.pathname.startsWith("/api/admin/properties/") &&
+    request.method === "DELETE" &&
+    !url.pathname.endsWith("/images")
+) {
+    if (!isAuthenticated) {
+        return new Response(JSON.stringify({
+            error: "No autorizado"
+        }), {
+            status: 401,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
+
+    const parts = url.pathname.split("/");
+    const propertyId = parts[4];
+
+    const property = await env.DB.prepare(
+        "SELECT id FROM properties WHERE id = ?"
+    ).bind(propertyId).first();
+
+    if (!property) {
+        return new Response(JSON.stringify({
+            error: "La propiedad no existe"
+        }), {
+            status: 404,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
+
+    const { results: images } = await env.DB.prepare(
+        "SELECT image_url FROM property_images WHERE property_id = ?"
+    ).bind(propertyId).all();
+
+    for (const image of images) {
+
+        const imageKey =
+            image.image_url.replace("/api/images/", "");
+
+        await env.IMAGES.delete(imageKey);
+    }
+
+    await env.DB.prepare(
+        "DELETE FROM property_images WHERE property_id = ?"
+    ).bind(propertyId).run();
+
+    await env.DB.prepare(
+        "DELETE FROM properties WHERE id = ?"
+    ).bind(propertyId).run();
+
+    return new Response(JSON.stringify({
+        success: true
+    }), {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+}
     if (!isAuthenticated) {
         return new Response(JSON.stringify({
             error: "No autorizado"
