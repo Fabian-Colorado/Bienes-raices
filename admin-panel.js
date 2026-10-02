@@ -209,6 +209,61 @@ await loadProperties();
     }
 
 });
+            const primaryImageButtons =
+    article.querySelectorAll(".primary-image-button");
+
+primaryImageButtons.forEach(button => {
+
+    button.addEventListener("click", async () => {
+
+        const imageUrl =
+            button.dataset.imageUrl;
+
+        try {
+
+            const response = await fetch(
+                `/api/admin/properties/${property.id}/images/primary`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        image_url: imageUrl
+                    })
+                }
+            );
+
+            if (response.status === 401) {
+                window.location.href = "/admin.html";
+                return;
+            }
+
+            const result =
+                await response.json();
+
+            if (!response.ok) {
+                alert(
+                    result.error ||
+                    "No se pudo marcar la fotografía como principal."
+                );
+                return;
+            }
+
+            await loadProperties();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Error de conexión al cambiar la fotografía principal."
+            );
+        }
+
+    });
+
+});
 
 const deleteImageButtons =
     article.querySelectorAll(".delete-image-button");
