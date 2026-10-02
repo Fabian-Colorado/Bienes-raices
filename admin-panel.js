@@ -143,7 +143,60 @@ editButton.addEventListener("click", () => {
 
 });
         
+const deleteImageButtons =
+    article.querySelectorAll(".delete-image-button");
 
+deleteImageButtons.forEach(button => {
+
+    button.addEventListener("click", async () => {
+
+        const imageUrl =
+            button.dataset.imageUrl;
+
+        try {
+
+            const response = await fetch(
+                `/api/admin/properties/${property.id}/images`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        image_url: imageUrl
+                    })
+                }
+            );
+
+            if (response.status === 401) {
+                window.location.href = "/admin.html";
+                return;
+            }
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                alert(
+                    result.error ||
+                    "No se pudo eliminar la fotografía."
+                );
+                return;
+            }
+
+            await loadProperties();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Error de conexión al eliminar la fotografía."
+            );
+        }
+
+    });
+
+});
             propertyList.appendChild(article);
 
         });
