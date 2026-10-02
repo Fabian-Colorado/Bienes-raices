@@ -87,6 +87,21 @@ ${property.images && property.images.length > 0 ? `
                     class="delete-image-button"
                     data-image-url="${image}"
                 >
+                <button
+    type="button"
+    class="primary-image-button"
+    data-image-url="${image}"
+>
+    ⭐ Marcar como principal
+</button>
+
+<button
+    type="button"
+    class="delete-image-button"
+    data-image-url="${image}"
+>
+    Eliminar foto
+</button>
                     Eliminar foto
                 </button>
             </div>
