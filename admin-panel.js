@@ -71,9 +71,25 @@ article.innerHTML = `
         <strong>Habitaciones:</strong> ${property.bedrooms} |
         <strong>Baños:</strong> ${property.bathrooms}
     </p>
-    ${property.images && property.images.length > 0 ? `
-        <img src="${property.images[0]}" alt="${property.title}" style="max-width:200px;">
-    ` : ""}
+${property.images && property.images.length > 0 ? `
+    <div class="property-image-gallery">
+        ${property.images.map((image, index) => `
+            <div class="property-image-item">
+                <img
+                    src="${image}"
+                    alt="${property.title} - Foto ${index + 1}"
+                >
+                <button
+                    type="button"
+                    class="delete-image-button"
+                    data-image-url="${image}"
+                >
+                    Eliminar foto
+                </button>
+            </div>
+        `).join("")}
+    </div>
+` : ""}
     <div class="property-actions">
         <button class="edit-property-button">Editar</button>
         <button class="delete-property-button">Eliminar</button>
