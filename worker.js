@@ -160,14 +160,24 @@ export default {
             });
         }
 
-                // Prueba de conexión con R2
-        if (url.pathname === "/api/test-r2") {
-            const testFile = await env.IMAGES.get("test.txt");
+        // Prueba de subida a R2
+        if (url.pathname === "/api/test-r2-upload" && request.method === "POST") {
+            const file = await request.arrayBuffer();
+
+            await env.IMAGES.put(
+                "test-image.jpg",
+                file,
+                {
+                    httpMetadata: {
+                        contentType: "image/jpeg"
+                    }
+                }
+            );
 
             return new Response(
                 JSON.stringify({
-                    r2_connected: true,
-                    test_file_exists: Boolean(testFile)
+                    success: true,
+                    message: "Imagen subida correctamente a R2"
                 }),
                 {
                     headers: {
