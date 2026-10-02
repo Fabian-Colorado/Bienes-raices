@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de imágenes de propiedad</title>
+</head>
+<body>
+
+    <h1>Prueba de imagen de propiedad</h1>
+
+    <p>Propiedad: Casa familiar en Tula (ID 1)</p>
+
+    <input type="file" id="image-input" accept="image/*">
+
+    <button id="upload-button">
+        Subir imagen
+    </button>
+
+    <p id="message"></p>
+
+    <script>
+        const imageInput = document.getElementById("image-input");
+        const uploadButton = document.getElementById("upload-button");
+        const message = document.getElementById("message");
+
+        uploadButton.addEventListener("click", async () => {
+            const file = imageInput.files[0];
+
+            if (!file) {
+                message.textContent = "Selecciona una imagen primero.";
+                return;
+            }
+
+            message.textContent = "Subiendo imagen...";
+
+            try {
+                const response = await fetch(
+                    "/api/admin/properties/1/images",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": file.type
+                        },
+                        body: file
+                    }
+                );
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    message.textContent =
+                        "Error: " + (result.error || "No se pudo subir.");
+                    return;
+                }
+
+                message.textContent =
+                    "Imagen subida correctamente: " + result.image_url;
+
+            } catch (error) {
+                console.error(error);
+                message.textContent = "Error de conexión.";
+            }
+        });
+    </script>
+
+</body>
+</html>
