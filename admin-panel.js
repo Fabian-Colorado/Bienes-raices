@@ -65,29 +65,21 @@ async function loadProperties() {
             
 article.innerHTML = `
     <h3>${property.title}</h3>
-
     <p><strong>Precio:</strong> ${property.price}</p>
-
     <p><strong>Ubicación:</strong> ${property.location}</p>
-
     <p>
-        <strong>Habitaciones:</strong> ${property.bedrooms}
-        |
+        <strong>Habitaciones:</strong> ${property.bedrooms} |
         <strong>Baños:</strong> ${property.bathrooms}
     </p>
-
+    ${property.images && property.images.length > 0 ? `
+        <img src="${property.images[0]}" alt="${property.title}" style="max-width:200px;">
+    ` : ""}
     <div class="property-actions">
-
-        <button class="edit-property-button">
-            Editar
-        </button>
-
-        <button class="delete-property-button">
-            Eliminar
-        </button>
-
+        <button class="edit-property-button">Editar</button>
+        <button class="delete-property-button">Eliminar</button>
     </div>
 `;
+
 const editButton =
     article.querySelector(".edit-property-button");
 
