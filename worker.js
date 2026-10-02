@@ -130,6 +130,71 @@ export default {
             });
         }
 
+        // API administrativa - eliminar imagen de propiedad
+if (
+    url.pathname.startsWith("/api/admin/properties/") &&
+    url.pathname.endsWith("/images") &&
+    request.method === "DELETE"
+) {
+    if (!isAuthenticated) {
+        return new Response(JSON.stringify({
+            error: "No autorizado"
+        }), {
+            status: 401,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
+
+    const parts = url.pathname.split("/");
+    const propertyId = parts[4];
+
+    const body = await request.json();
+    const imageUrl = body.image_url;
+
+    if (!imageUrl) {
+        return new Response(JSON.stringify({
+            error: "Falta la imagen"
+        }), {
+            status: 400,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
+
+    const image = await env.DB.prepare(
+        "SELECT id, image_url FROM property_images WHERE property_id = ? AND image_url = ?"
+    ).bind(propertyId, imageUrl).first();
+
+    if (!image) {
+        return new Response(JSON.stringify({
+            error: "La imagen no existe"
+        }), {
+            status: 404,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
+
+    const imageKey = image.image_url.replace("/api/images/", "");
+
+    await env.IMAGES.delete(imageKey);
+
+    await env.DB.prepare(
+        "DELETE FROM property_images WHERE id = ?"
+    ).bind(image.id).run();
+
+    return new Response(JSON.stringify({
+        success: true
+    }), {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+}
                 // API administrativa - subir imagen de propiedad
         if (url.pathname.startsWith("/api/admin/properties/") && url.pathname.endsWith("/images") && request.method === "POST") {
             if (!isAuthenticated) {
