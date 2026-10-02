@@ -267,7 +267,8 @@ propertyForm.addEventListener("submit", async (event) => {
 
     event.preventDefault();
 
-    formMessage.textContent = "Guardando propiedad...";
+    formMessage.textContent =
+        "Guardando propiedad...";
 
     const property = {
 
@@ -292,55 +293,138 @@ propertyForm.addEventListener("submit", async (event) => {
             document.getElementById("description").value
     };
 
+    const files = propertyImagesInput.files;
+
     try {
 
-let response;
+        let response;
 
-if (editingPropertyId === null) {
+        /*
+         * CREAR PROPIEDAD
+         */
+        if (editingPropertyId === null) {
 
-    response = await fetch(
-        "/api/admin/properties",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(property)
+            response = await fetch(
+                "/api/admin/properties",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(property)
+                }
+            );
+
+        /*
+         * EDITAR PROPIEDAD
+         */
+        } else {
+
+            response = await fetch(
+                `/api/admin/properties/${editingPropertyId}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(property)
+                }
+            );
+
         }
-    );
 
-} else {
+        if (response.status === 401) {
 
-    response = await fetch(
-        `/api/admin/properties/${editingPropertyId}`,
-        {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(property)
+            window.location.href = "/admin.html";
+            return;
         }
-    );
 
-}
+        if (!response.ok) {
 
-if (response.status === 401) {
+            const result = await response.json();
 
-    window.location.href = "/admin.html";
-    return;
-}
+            formMessage.textContent =
+                result.error ||
+                "No se pudo guardar la propiedad.";
 
+            return;
+        }
+
+        /*
+         * OBTENER EL ID DE LA PROPIEDAD
+         */
+        const result = await response.json();
+
+        const propertyId =
+            editingPropertyId !== null
+                ? editingPropertyId
+                : result.id;
+
+        /*
+         * SUBIR FOTOGRAFÍAS
+         */
+        if (files.length > 0) {
+
+            imageUploadMessage.textContent =
+                "Subiendo fotografías...";
+
+            for (const file of files) {
+
+                const imageResponse = await fetch(
+                    `/api/admin/properties/${propertyId}/images`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": file.type
+                        },
+                        body: file
+                    }
+                );
+
+                const imageResult =
+                    await imageResponse.json();
+
+                if (!imageResponse.ok) {
+
+                    formMessage.textContent =
+                        "La propiedad se guardó, pero hubo un problema al subir una fotografía.";
+
+                    imageUploadMessage.textContent =
+                        imageResult.error ||
+                        "No se pudo subir una fotografía.";
+
+                    await loadProperties();
+
+                    return;
+                }
+            }
+
+            imageUploadMessage.textContent =
+                "Fotografías subidas correctamente.";
+
+        } else {
+
+            imageUploadMessage.textContent = "";
+        }
+
+        /*
+         * TODO TERMINADO
+         */
         formMessage.textContent =
-            "Propiedad guardada correctamente.";
+            "Propiedad y fotografías guardadas correctamente.";
 
-editingPropertyId = null;
+        editingPropertyId = null;
 
-propertyForm.reset();
+        propertyForm.reset();
 
-document.getElementById("bedrooms").value = 0;
-document.getElementById("bathrooms").value = 0;
+        propertyImagesInput.value = "";
 
-await loadProperties();
+        propertyImagesPreview.innerHTML = "";
+
+        document.getElementById("bedrooms").value = 0;
+        document.getElementById("bathrooms").value = 0;
+
+        await loadProperties();
 
     } catch (error) {
 
@@ -351,7 +435,6 @@ await loadProperties();
     }
 
 });
-
 uploadImagesButton.addEventListener("click", async () => {
     if (editingPropertyId === null) {
         imageUploadMessage.textContent =
