@@ -236,7 +236,78 @@ if (
     });
 }
 
+// API administrativa - marcar fotografía como principal
+if (
+    url.pathname.startsWith("/api/admin/properties/") &&
+    url.pathname.endsWith("/images/primary") &&
+    request.method === "PUT"
+) {
+    if (!isAuthenticated) {
+        return new Response(JSON.stringify({
+            error: "No autorizado"
+        }), {
+            status: 401,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
 
+    const parts = url.pathname.split("/");
+    const propertyId = parts[4];
+
+    const body = await request.json();
+    const imageUrl = body.image_url;
+
+    if (!imageUrl) {
+        return new Response(JSON.stringify({
+            error: "Falta la imagen"
+        }), {
+            status: 400,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
+
+    const image = await env.DB.prepare(
+        "SELECT id FROM property_images WHERE property_id = ? AND image_url = ?"
+    ).bind(propertyId, imageUrl).first();
+
+    if (!image) {
+        return new Response(JSON.stringify({
+            error: "La imagen no existe"
+        }), {
+            status: 404,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
+
+    const { results: images } = await env.DB.prepare(
+        "SELECT id FROM property_images WHERE property_id = ? ORDER BY sort_order, id"
+    ).bind(propertyId).all();
+
+    const orderedImages = [
+        image,
+        ...images.filter(img => img.id !== image.id)
+    ];
+
+    for (let i = 0; i < orderedImages.length; i++) {
+        await env.DB.prepare(
+            "UPDATE property_images SET sort_order = ? WHERE id = ?"
+        ).bind(i, orderedImages[i].id).run();
+    }
+
+    return new Response(JSON.stringify({
+        success: true
+    }), {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+}
 // API administrativa - eliminar imagen de propiedad
 if (
     url.pathname.startsWith("/api/admin/properties/") &&
