@@ -186,31 +186,32 @@ export default {
                 }
             );
         }
+             // Prueba de lectura desde R2
+        if (url.pathname === "/api/test-r2-image") {
+            const file = await env.IMAGES.get("test-image.jpg");
+
+            if (!file) {
+                return new Response(
+                    JSON.stringify({
+                        success: false,
+                        message: "La imagen todavía no existe"
+                    }),
+                    {
+                        status: 404,
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+            }
+
+            return new Response(file.body, {
+                headers: {
+                    "Content-Type": "image/jpeg"
+                }
+            });
+        }
+
         return env.ASSETS.fetch(request);
     }
-    // Prueba de lectura desde R2
-if (url.pathname === "/api/test-r2-image") {
-    const file = await env.IMAGES.get("test-image.jpg");
-
-    if (!file) {
-        return new Response(
-            JSON.stringify({
-                success: false,
-                message: "La imagen todavía no existe"
-            }),
-            {
-                status: 404,
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }
-        );
-    }
-
-    return new Response(file.body, {
-        headers: {
-            "Content-Type": "image/jpeg"
-        }
-    });
-}
 };
