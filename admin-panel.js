@@ -22,6 +22,16 @@ const imageUploadMessage =
 
 const formMessage =
     document.getElementById("form-message");
+
+const propertyImagesInput =
+    document.getElementById("property-images");
+
+const uploadImagesButton =
+    document.getElementById("upload-images-button");
+
+const imageUploadMessage =
+    document.getElementById("image-upload-message");
+
 let editingPropertyId = null;
 
 addPropertyButton.addEventListener("click", () => {
