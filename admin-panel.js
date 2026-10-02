@@ -17,6 +17,9 @@ const propertyImagesInput =
 const uploadImagesButton =
     document.getElementById("upload-images-button");
 
+const propertyImagesPreview =
+    document.getElementById("property-images-preview");
+
 const imageUploadMessage =
     document.getElementById("image-upload-message");
 
@@ -308,6 +311,29 @@ uploadImagesButton.addEventListener("click", async () => {
     }
 
     const files = propertyImagesInput.files;
+
+    propertyImagesPreview.innerHTML = "";
+
+for (const file of files) {
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+
+        const previewItem = document.createElement("div");
+
+        previewItem.className = "image-preview-item";
+
+        previewItem.innerHTML = `
+            <img src="${reader.result}" alt="Vista previa">
+            <p>${file.name}</p>
+        `;
+
+        propertyImagesPreview.appendChild(previewItem);
+    };
+
+    reader.readAsDataURL(file);
+}
 
     if (files.length === 0) {
         imageUploadMessage.textContent =
