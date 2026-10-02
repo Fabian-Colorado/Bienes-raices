@@ -184,17 +184,14 @@ deletePropertyButton.addEventListener("click", async () => {
 
         await loadProperties();
 
-    } catch (error) {
+} catch (error) {
 
-        console.error(error);
+    console.error(error);
 
-        alert(
-            "Error de conexión al eliminar la propiedad."
-        );
-    }
-
-});
-        
+    alert(
+        "Error: " + error.message
+    );
+}
 const deleteImageButtons =
     article.querySelectorAll(".delete-image-button");
 
