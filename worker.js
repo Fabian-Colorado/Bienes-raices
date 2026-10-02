@@ -144,98 +144,6 @@ if (url.pathname === "/api/admin/properties" && request.method === "GET") {
                 headers: { "Content-Type": "application/json" }
             });
         }
-
-        // API administrativa - actualizar propiedad
-        if (url.pathname.startsWith("/api/admin/properties/") && request.method === "PUT") {
-            if (!isAuthenticated) {
-                return new Response(JSON.stringify({ error: "No autorizado" }), {
-                    status: 401,
-                    headers: { "Content-Type": "application/json" }
-                });
-            }
-            const id = url.pathname.split("/").pop();
-            const body = await request.json();
-            const result = await env.DB.prepare(`
-                UPDATE properties SET
-                    title = ?, price = ?, location = ?, bedrooms = ?, bathrooms = ?,
-                    water = ?, electricity = ?, deeds = ?, debt = ?, description = ?
-                WHERE id = ?
-            `).bind(
-                body.title, body.price, body.location, body.bedrooms, body.bathrooms,
-                body.water ? 1 : 0, body.electricity ? 1 : 0, body.deeds ? 1 : 0,
-                body.debt ? 1 : 0, body.description, id
-            ).run();
-
-            console.log("Propiedad actualizada:", { id, cambios: result.meta.changes });
-            return new Response(JSON.stringify({ success: true }), {
-                headers: { "Content-Type": "application/json" }
-            });
-        }
-
-      // API administrativa - eliminar propiedad completa
-if (
-    url.pathname.startsWith("/api/admin/properties/") &&
-    request.method === "DELETE" &&
-    !url.pathname.endsWith("/images")
-) {
-    if (!isAuthenticated) {
-        return new Response(JSON.stringify({
-            error: "No autorizado"
-        }), {
-            status: 401,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-    }
-
-    const parts = url.pathname.split("/");
-    const propertyId = parts[4];
-
-    const property = await env.DB.prepare(
-        "SELECT id FROM properties WHERE id = ?"
-    ).bind(propertyId).first();
-
-    if (!property) {
-        return new Response(JSON.stringify({
-            error: "La propiedad no existe"
-        }), {
-            status: 404,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-    }
-
-    const { results: images } = await env.DB.prepare(
-        "SELECT image_url FROM property_images WHERE property_id = ?"
-    ).bind(propertyId).all();
-
-    for (const image of images) {
-
-        const imageKey =
-            image.image_url.replace("/api/images/", "");
-
-        await env.IMAGES.delete(imageKey);
-    }
-
-    await env.DB.prepare(
-        "DELETE FROM property_images WHERE property_id = ?"
-    ).bind(propertyId).run();
-
-    await env.DB.prepare(
-        "DELETE FROM properties WHERE id = ?"
-    ).bind(propertyId).run();
-
-    return new Response(JSON.stringify({
-        success: true
-    }), {
-        headers: {
-            "Content-Type": "application/json"
-        }
-    });
-}
-
 // API administrativa - marcar fotografía como principal
 if (
     url.pathname.startsWith("/api/admin/properties/") &&
@@ -365,6 +273,96 @@ if (
     await env.DB.prepare(
         "DELETE FROM property_images WHERE id = ?"
     ).bind(image.id).run();
+
+    return new Response(JSON.stringify({
+        success: true
+    }), {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+}
+        // API administrativa - actualizar propiedad
+        if (url.pathname.startsWith("/api/admin/properties/") && request.method === "PUT") {
+            if (!isAuthenticated) {
+                return new Response(JSON.stringify({ error: "No autorizado" }), {
+                    status: 401,
+                    headers: { "Content-Type": "application/json" }
+                });
+            }
+            const id = url.pathname.split("/").pop();
+            const body = await request.json();
+            const result = await env.DB.prepare(`
+                UPDATE properties SET
+                    title = ?, price = ?, location = ?, bedrooms = ?, bathrooms = ?,
+                    water = ?, electricity = ?, deeds = ?, debt = ?, description = ?
+                WHERE id = ?
+            `).bind(
+                body.title, body.price, body.location, body.bedrooms, body.bathrooms,
+                body.water ? 1 : 0, body.electricity ? 1 : 0, body.deeds ? 1 : 0,
+                body.debt ? 1 : 0, body.description, id
+            ).run();
+
+            console.log("Propiedad actualizada:", { id, cambios: result.meta.changes });
+            return new Response(JSON.stringify({ success: true }), {
+                headers: { "Content-Type": "application/json" }
+            });
+        }
+
+      // API administrativa - eliminar propiedad completa
+if (
+    url.pathname.startsWith("/api/admin/properties/") &&
+    request.method === "DELETE" &&
+    !url.pathname.endsWith("/images")
+) {
+    if (!isAuthenticated) {
+        return new Response(JSON.stringify({
+            error: "No autorizado"
+        }), {
+            status: 401,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
+
+    const parts = url.pathname.split("/");
+    const propertyId = parts[4];
+
+    const property = await env.DB.prepare(
+        "SELECT id FROM properties WHERE id = ?"
+    ).bind(propertyId).first();
+
+    if (!property) {
+        return new Response(JSON.stringify({
+            error: "La propiedad no existe"
+        }), {
+            status: 404,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
+
+    const { results: images } = await env.DB.prepare(
+        "SELECT image_url FROM property_images WHERE property_id = ?"
+    ).bind(propertyId).all();
+
+    for (const image of images) {
+
+        const imageKey =
+            image.image_url.replace("/api/images/", "");
+
+        await env.IMAGES.delete(imageKey);
+    }
+
+    await env.DB.prepare(
+        "DELETE FROM property_images WHERE property_id = ?"
+    ).bind(propertyId).run();
+
+    await env.DB.prepare(
+        "DELETE FROM properties WHERE id = ?"
+    ).bind(propertyId).run();
 
     return new Response(JSON.stringify({
         success: true
