@@ -145,6 +145,55 @@ editButton.addEventListener("click", () => {
         property.description || "";
 
 });
+            const deletePropertyButton =
+    article.querySelector(".delete-property-button");
+
+deletePropertyButton.addEventListener("click", async () => {
+
+    const confirmed = confirm(
+        `¿Seguro que quieres eliminar "${property.title}"?\n\nTambién se eliminarán todas sus fotografías.`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `/api/admin/properties/${property.id}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        if (response.status === 401) {
+            window.location.href = "/admin.html";
+            return;
+        }
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(
+                result.error ||
+                "No se pudo eliminar la propiedad."
+            );
+            return;
+        }
+
+        await loadProperties();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Error de conexión al eliminar la propiedad."
+        );
+    }
+
+});
         
 const deleteImageButtons =
     article.querySelectorAll(".delete-image-button");
