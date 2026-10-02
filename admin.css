@@ -140,6 +140,10 @@ main {
     background: #222;
     color: white;
 }
+#cancel-property-button {
+    background: #ddd;
+}
+
 .property-image-gallery {
     display: flex;
     flex-wrap: wrap;
@@ -166,8 +170,4 @@ main {
     border: none;
     border-radius: 6px;
     cursor: pointer;
-}
-
-#cancel-property-button {
-    background: #ddd;
 }
