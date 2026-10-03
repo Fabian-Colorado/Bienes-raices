@@ -435,3 +435,38 @@ function openPropertyModal(property) {
     });
 
 }
+//
+// CONTACTO PARA PROPIETARIOS
+//
+
+const ownerContactButton =
+    document.getElementById("owner-contact-button");
+
+const ownerContactMenu =
+    document.getElementById("owner-contact-menu");
+
+const ownerWhatsappButton =
+    document.getElementById("owner-whatsapp-button");
+
+
+ownerContactButton.addEventListener("click", () => {
+
+    ownerContactMenu.classList.toggle("active");
+
+});
+
+
+ownerWhatsappButton.addEventListener("click", () => {
+
+    const message =
+        "Hola, tengo una propiedad que me interesa vender.";
+
+    const whatsappURL =
+        `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+    window.open(
+        whatsappURL,
+        "_blank"
+    );
+
+});
