@@ -315,3 +315,98 @@ h2 {
 .property-details {
     display: none;
 }
+/* =========================================
+   CONTACTO PARA PROPIETARIOS
+   ========================================= */
+
+.owner-contact {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+/* Botón principal */
+.owner-contact-button {
+    border: none;
+    border-radius: 30px;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #222;
+    color: white;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.owner-contact-button:hover {
+    transform: translateY(-2px);
+}
+
+/* Menú desplegable */
+.owner-contact-menu {
+    display: none;
+    width: 300px;
+    padding: 20px;
+    border-radius: 16px;
+    background: white;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ddd;
+}
+
+/* Cuando está abierto */
+.owner-contact-menu.active {
+    display: block;
+}
+
+.owner-contact-title {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.owner-contact-text {
+    margin: 0 0 16px;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* WhatsApp */
+.owner-whatsapp-button {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 15px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #25D366;
+    color: white;
+}
+
+.owner-whatsapp-button:hover {
+    opacity: 0.9;
+}
+
+/* Adaptación para teléfonos */
+@media (max-width: 600px) {
+
+    .owner-contact {
+        right: 12px;
+        bottom: 12px;
+    }
+
+    .owner-contact-button {
+        font-size: 14px;
+        padding: 12px 16px;
+    }
+
+    .owner-contact-menu {
+        width: min(300px, calc(100vw - 24px));
+    }
+}
